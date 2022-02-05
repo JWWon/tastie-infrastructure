@@ -1,0 +1,2 @@
+ecr_repositories:
+  - name: 'tastie/backend'
