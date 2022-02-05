@@ -1,0 +1,16 @@
+name: Terraform Apply
+on: issue_comment
+jobs:
+  apply:
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == "terraform apply" }}
+    runs-on: ubuntu-20.04
+    env:
+      REF: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.5
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - run: echo $REF
+      - run: terraform version
