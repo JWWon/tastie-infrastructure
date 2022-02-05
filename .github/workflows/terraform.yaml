@@ -5,7 +5,7 @@ on:
       - 'deploy/*'
 
 jobs:
-  deploy:
+  plan:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -14,3 +14,14 @@ jobs:
           terraform_version: 1.1.5
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       - run: terraform version
+  apply:
+    runs-on: ubuntu-20.04
+    needs: plan
+    environment: apply
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.5
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - run: echo apply
