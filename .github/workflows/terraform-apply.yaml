@@ -2,7 +2,7 @@ name: Terraform Apply
 on: issue_comment
 jobs:
   apply:
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == "terraform apply" }}
+    if: ${{ github.event.issue.pull_request }} && {{ github.event.comment.body == "terraform apply" }}
     runs-on: ubuntu-20.04
     env:
       REF: ${{ github.ref }}
