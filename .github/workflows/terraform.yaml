@@ -11,6 +11,8 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-20.04
+    outputs:
+      GIT_DIFF: ${{ steps.get-diff.outputs.diff }}
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -20,7 +22,13 @@ jobs:
       - uses: technote-space/get-diff-action@v4
         with:
           SEPARATOR: ','
-      - run: echo $GIT_DIFF | tr , \\n | xargs -n 1 dirname | uniq | xargs -n 1 bash -c 'cd $0 && echo $0 && terraform init && terraform plan'
+      - name: Get git diff
+        id: get-diff
+        run: |
+          echo "::set-output name=diff::$GIT_DIFF"
+      - name: Plan terraform
+        run: |
+          echo $GIT_DIFF | tr , \\n | xargs -n 1 dirname | uniq | xargs -n 1 bash -c 'cd $0 && echo $0 && terraform init && terraform plan'
   apply:
     runs-on: ubuntu-20.04
     needs: plan
@@ -31,4 +39,8 @@ jobs:
         with:
           terraform_version: 1.1.5
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      - run: echo apply
+      - name: Apply terraform
+        env:
+          GIT_DIFF: ${{ needs.plan.outputs.GIT_DIFF }}
+        run: |
+          echo $GIT_DIFF | tr , \\n | xargs -n 1 dirname | uniq | xargs -n 1 bash -c 'cd $0 && echo $0 && terraform init && terraform apply -auto-approve'
