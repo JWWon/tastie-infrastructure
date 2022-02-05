@@ -1,8 +1,8 @@
 name: Terraform
 on: 
   pull_request:
-    branches:
-      - deploy/*
+    # branches:
+    #   - deploy/*
 
 jobs:
   deploy:
