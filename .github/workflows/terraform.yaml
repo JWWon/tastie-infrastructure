@@ -16,7 +16,7 @@ jobs:
       - uses: technote-space/get-diff-action@v4
         with:
           SEPARATOR: ','
-      - run: echo $GIT_DIFF | tr , \\n | xargs -n 1 dirname | uniq | xargs -n 1 bash -c 'cd $0 && echo $0 && terraform plan'
+      - run: echo $GIT_DIFF | tr , \\n | xargs -n 1 dirname | uniq | xargs -n 1 bash -c 'cd $0 && echo $0 && terraform init && terraform plan'
   apply:
     runs-on: ubuntu-20.04
     needs: plan
