@@ -17,7 +17,7 @@ resource "aws_apprunner_service" "backend" {
 
   source_configuration {
     authentication_configuration {
-      access_role_arn = "arn:aws:iam::645216642656:role/service-role/AppRunnerECRAccessRole"
+      access_role_arn = aws_iam_role.backend.arn
     }
 
     auto_deployments_enabled = false
